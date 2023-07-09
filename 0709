@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// 定义线索二叉树结点
+struct TreeNode{
+    struct TreeNode* left;
+    struct TreeNode* right;
+    int leftThread;          // 用来标记左子树是否为线索
+    int rightThread;         // 用来标记右子树是否为线索
+};
+
+// 二叉树的线索化
+void creatThreadBiTiree(struct TreeNode* root, struct TreeNode** pre){
+    if(root == NULL)
+        return;
+    // 对左子树进行线索化
+    creatThreadBiTiree(root->left, pre);
+    if(*pre != NULL){
+        if(root->left == NULL){
+            root->left = *pre;
+            root->leftThread = 1;
+        }
+        if((*pre)->right == NULL){
+            (*pre)->right = root;
+            (*pre)->rightThread = 1;
+        }
+        // 更新pre为当前结点
+        *pre = root;
+    }
+    // 对右子树进行线索化
+    creatThreadBiTiree(root->right, pre);
+    // 最后一个遍历到的节点的右子树指针应为空，将其指向prev
+    if ((*pre) != NULL) {
+        (*pre)->right = NULL;
+        (*pre)->rightThread = 1;
+    }
+}
+int main(){
+
+}
